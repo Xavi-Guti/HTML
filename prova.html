@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="ca">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Zenless Zone Zero — Demo</title>
+
+    <style>
+        /* Theme: Zenless Zone Zero - estil fosc, neó i futurista */
+        /* Importa fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap');
+
+        :root {
+            --bg-1: #071021;
+            --bg-2: #081426;
+            --card: rgba(255, 255, 255, 0.04);
+            --glass: rgba(255, 255, 255, 0.06);
+            --accent: #4ee3ff;
+            /* neon cyan */
+            --accent-2: #ff58b8;
+            /* neon magenta */
+            --muted: #98a0ad;
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --max-width: 1200px;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            height: 100%
+        }
+
+        /* Afegit: transicions per al canvi de tema */
+        body,
+        .site,
+        .site-header,
+        .site-footer,
+        .character-card,
+        .news-article,
+        .faction-item,
+        .main-nav a,
+        .social-links a {
+            transition:
+                background-color 0.6s ease,
+                color 0.6s ease,
+                border-color 0.6s ease,
+                box-shadow 0.6s ease;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            background:
+                radial-gradient(1200px 600px at 10% 10%, rgba(78, 227, 255, 0.06), transparent 8%),
+                radial-gradient(900px 500px at 90% 85%, rgba(255, 88, 184, 0.04), transparent 10%),
+                linear-gradient(180deg, var(--bg-1), var(--bg-2));
+            color: #e6eef6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding: 36px 18px;
+            line-height: 1.45;
+        }
+
+        /* Layout wrapper */
+        .site {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), transparent);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(3, 6, 12, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+        }
+
+        /* Header */
+        .site-header {
+            padding: 24px 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.0005));
+        }
+
+        .wrap {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap
+        }
+
+        /* header inner layout */
+        .header-inner {
+            justify-content: space-between
+        }
+
+        .brand h1 {
+            margin: 0;
+            font-family: "Orbitron", monospace;
+            font-weight: 700;
+            font-size: 1.6rem;
+            letter-spacing: 0.6px;
+            color: #e7fbff;
+            text-shadow: 0 2px 10px rgba(78, 227, 255, 0.12), 0 0 18px rgba(255, 88, 184, 0.03);
+        }
+
+        .tagline {
+            margin: 6px 0 0 0;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        /* Navigation */
+        .main-nav {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .main-nav a {
+            color: var(--muted);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all .22s ease;
+            position: relative;
+            font-size: 0.95rem;
+        }
+
+        .main-nav a:hover,
+        .main-nav a:focus {
+            color: var(--bg-2);
+            background: linear-gradient(90deg, rgba(78, 227, 255, 0.14), rgba(255, 88, 184, 0.08));
+            box-shadow: 0 6px 18px rgba(78, 227, 255, 0.06);
+            transform: translateY(-2px);
+        }
+
+        /* Main content */
+        main.wrap {
+            display: block;
+            padding: 28px 18px;
+            gap: 28px;
+        }
+
+        /* Sections */
+        section {
+            margin-bottom: 28px
+        }
+
+        h2 {
+            font-family: "Orbitron", sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            margin: 0 0 14px 0;
+            color: #dff9ff;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* IMAGE GALLERY */
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .image-grid .image-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.1));
+            border: 1px solid var(--glass-border);
+        }
+
+        .image-grid img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+            transition: transform .6s cubic-bezier(.2, .9, .2, 1), filter .5s;
+            filter: grayscale(6%) contrast(1.02);
+        }
+
+        .image-grid .image-item:hover img {
+            transform: scale(1.06);
+            filter: grayscale(0%) contrast(1.06);
+        }
+
+        .image-grid figcaption {
+            position: absolute;
+            left: 12px;
+            bottom: 12px;
+            padding: 8px 12px;
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.25));
+            color: #fff;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            backdrop-filter: blur(4px) saturate(120%);
+            box-shadow: 0 4px 22px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.02) inset;
+        }
+
+        /* Character cards */
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .character-card {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            padding: 14px;
+            border-radius: 12px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            border: 1px solid var(--glass-border);
+            transition: transform .28s ease, box-shadow .28s ease;
+        }
+
+        .character-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 40px rgba(3, 6, 12, 0.6), 0 0 28px rgba(78, 227, 255, 0.04);
+        }
+
+        .avatar {
+            flex: 0 0 96px;
+            width: 96px;
+            height: 96px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: linear-gradient(45deg, rgba(78, 227, 255, 0.06), rgba(255, 88, 184, 0.04));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Card body */
+        .card-body h3 {
+            margin: 0 0 6px 0;
+            font-size: 1.05rem;
+            color: #f6ffff;
+            font-weight: 600
+        }
+
+        .card-body p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.95rem
+        }
+
+        /* Factions */
+        .faction-list {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .faction-item {
+            flex: 1 1 240px;
+            padding: 14px;
+            border-radius: 12px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.008));
+            border: 1px solid var(--glass-border);
+            transition: transform .18s ease, box-shadow .18s ease;
+        }
+
+        .faction-item:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 28px rgba(3, 6, 12, 0.45);
+        }
+
+        .faction-item h3 {
+            margin: 0 0 8px 0;
+            color: #e9fbff;
+            font-weight: 700
+        }
+
+        .faction-item p {
+            margin: 0;
+            color: var(--muted)
+        }
+
+        /* News */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .news-article {
+            padding: 14px;
+            border-radius: 12px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), rgba(0, 0, 0, 0.04));
+            border: 1px solid var(--glass-border);
+        }
+
+        .news-article h3 {
+            margin: 0 0 8px 0;
+            color: #eafcff;
+            font-size: 1rem
+        }
+
+        .news-article p {
+            color: var(--muted);
+            margin: 0 0 12px 0
+        }
+
+        .read-more {
+            display: inline-block;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 700;
+            transition: transform .18s ease, text-shadow .18s;
+        }
+
+        .read-more:hover {
+            transform: translateX(6px);
+            text-shadow: 0 6px 26px rgba(78, 227, 255, 0.08)
+        }
+
+        /* Footer */
+        .site-footer {
+            padding: 20px 18px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.02));
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap
+        }
+
+        .site-footer p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.92rem
+        }
+
+        .social-links a {
+            color: var(--muted);
+            text-decoration: none;
+            margin-left: 10px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            transition: all .18s;
+            font-weight: 600;
+        }
+
+        .social-links a:hover {
+            color: #071426;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            box-shadow: 0 8px 30px rgba(78, 227, 255, 0.06);
+        }
+
+        /* Small utilities */
+        @media (max-width:1000px) {
+            .image-grid {
+                grid-template-columns: repeat(2, 1fr)
+            }
+
+            .character-grid {
+                grid-template-columns: 1fr
+            }
+
+            .news-grid {
+                grid-template-columns: 1fr
+            }
+
+            .header-inner {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px
+            }
+
+            .wrap {
+                padding: 0
+            }
+        }
+
+        @media (max-width:600px) {
+            body {
+                padding: 18px 12px
+            }
+
+            .image-grid img {
+                height: 160px
+            }
+
+            .brand h1 {
+                font-size: 1.25rem
+            }
+
+            .main-nav {
+                flex-wrap: wrap
+            }
+
+            .social-links a {
+                margin-left: 6px;
+                padding: 6px 8px;
+                font-size: 0.9rem
+            }
+        }
+
+        /* Subtle animated accent line under headings */
+        h2::after {
+            content: "";
+            display: inline-block;
+            height: 4px;
+            width: 48px;
+            margin-left: 10px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            box-shadow: 0 8px 20px rgba(78, 227, 255, 0.06);
+            vertical-align: middle;
+            transform-origin: left center;
+            transition: transform .4s ease;
+        }
+
+        h2:hover::after {
+            transform: scaleX(1.08)
+        }
+    </style>
+</head>
+
+<body>
+    <div class="site" role="document">
+        <header class="site-header" role="banner">
+            <div class="wrap header-inner">
+                <div class="brand">
+                    <h1>Zenless Zone Zero</h1>
+                    <div class="tagline">Neó, caos i esperança — temàtica futurista</div>
+                </div>
+
+                <nav class="main-nav" role="navigation" aria-label="Navegació principal">
+                    <a href="#galeria">Galeria</a>
+                    <a href="#personatges">Personatges</a>
+                    <a href="#faccions">Faccions</a>
+                    <a href="#noticies">Notícies</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="wrap" role="main">
+            <section id="galeria" aria-labelledby="galeria-title">
+                <h2 id="galeria-title">Galeria</h2>
+                <div class="image-grid">
+                    <figure class="image-item">
+                        <img src="https://img.game8.co/4212828/d8ce339b1533c0e4db683348a2252285.png/original"
+                            alt="Carrers neó de nit">
+                        <figcaption>District Night</figcaption>
+                    </figure>
+                    <figure class="image-item">
+                        <img src="https://img.game8.co/4212827/a7e997d6c402934dd349d7cded77bfee.png/show"
+                            alt="Arquitectura futurista">
+                        <figcaption>Playa</figcaption>
+                    </figure>
+                    <figure class="image-item">
+                        <img src="https://img.game8.co/4188428/cb5fd8e3d102a4138f7e1397004a86ab.png/show"
+                            alt="Il·luminació neó">
+                        <figcaption>Failume Heights</figcaption>
+                    </figure>
+                </div>
+            </section>
+
+            <section id="personatges" aria-labelledby="personatges-title">
+                <h2 id="personatges-title">Personatges</h2>
+                <div class="character-grid">
+                    <article class="character-card" aria-labelledby="c1">
+                        <div class="avatar">
+                            <img src="https://img.game8.co/3923998/0428802054152e251460f10bc94d4389.png/show"
+                                alt="Retrat Hiro">
+                        </div>
+                        <div class="card-body">
+                            <h3 id="c1">Billy</h3>
+                            <p>Operatiu silenciòs, infiltració i sigil.</p>
+                        </div>
+                    </article>
+
+                    <article class="character-card" aria-labelledby="c2" role="article" data-faction="engineering"
+                        tabindex="0">
+                        <div class="avatar" aria-hidden="true">
+                            <img src="https://img.game8.co/3924009/e033bf15c11f0cb6bc13841f042eedf3.png/show"
+                                alt="Retrat Mei">
+                        </div>
+                        <div class="card-body">
+                            <h3 id="c2">Anby</h3>
+                            <p>Tècnica d'armes i suport tàctic.</p>
+                            <div class="card-actions" aria-hidden="false"
+                                style="margin-top:10px; display:flex; gap:8px;">
+                                <button type="button" aria-label="Veure el perfil d'Anby"
+                                    style="background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#071426; border:0; padding:8px 10px; border-radius:8px; font-weight:700; cursor:pointer;">
+                                    Perfil
+                                </button>
+                                <a class="read-more" href="#" aria-label="Més informació sobre Anby"
+                                    style="align-self:center;">Més →</a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section id="faccions" aria-labelledby="faccions-title">
+                <h2 id="faccions-title">Faccions</h2>
+                <div class="faction-list">
+                    <div class="faction-item">
+                        <h3>Neon Collective</h3>
+                        <p>Controlen el mercat negre d'artefactes i il·luminació urbana.</p>
+                    </div>
+                    <div class="faction-item">
+                        <h3>Iron Ward</h3>
+                        <p>Guàrdies privatitzats, lleials al millor postor.</p>
+                    </div>
+                    <div class="faction-item">
+                        <h3>Ghost Net</h3>
+                        <p>Merodejadors digitals que controlen la xarxa submergida.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="noticies" aria-labelledby="noticies-title">
+                <h2 id="noticies-title">Notícies</h2>
+                <div class="news-grid">
+                    <article class="news-article">
+                        <h3>Operació al port — èxit</h3>
+                        <p>Una banda local va ser neutralitzada durant l'operació nocturna.</p>
+                        <a class="read-more" href="#">Llegeix més →</a>
+                    </article>
+
+                    <article class="news-article">
+                        <h3>Fuita tècnica</h3>
+                        <p>S'han detectat anomalies en el subministrament d'energia de la zona est.</p>
+                        <a class="read-more" href="#">Llegeix més →</a>
+                    </article>
+                </div>
+            </section>
+        </main>
+
+        <footer class="site-footer" role="contentinfo">
+            <div class="wrap footer-inner">
+                <p>© 2025 Zenless Zone Zero — Demo</p>
+                <div class="social-links" aria-label="Enllaços socials">
+                    <a href="#" aria-label="Twitter">Twitter</a>
+                    <a href="#" aria-label="Discord">Discord</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // lazy-load images and make them interactive for lightbox
+        document.querySelectorAll('.image-grid img, .avatar img').forEach(img => {
+            img.loading = 'lazy';
+            img.decoding = 'async';
+            img.style.cursor = 'zoom-in';
+            img.tabIndex = 0;
+            img.addEventListener('click', () => openLightbox(img.src, img.alt || ''));
+            img.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(img.src, img.alt || ''); } });
+        });
+
+        // Create and append a lightweight lightbox
+        const lightbox = document.createElement('div');
+        lightbox.id = 'zzz-lightbox';
+        lightbox.innerHTML = `
+        <style>
+            #zzz-lightbox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.78);z-index:1200;padding:24px}
+            #zzz-lightbox[open]{display:flex}
+            #zzz-lightbox .inner{max-width:calc(100% - 80px);max-height:calc(100% - 120px);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;align-items:center}
+            #zzz-lightbox img{max-width:100%;max-height:80vh;border-radius:8px;display:block}
+            #zzz-lightbox .caption{color:#e6eef6;padding:8px 12px;text-align:center;font-size:0.95rem}
+            #zzz-lightbox .close{position:absolute;right:18px;top:18px;background:transparent;border:0;color:#fff;font-size:20px;cursor:pointer;padding:6px;border-radius:8px}
+            @media (max-width:600px){ #zzz-lightbox .caption{font-size:0.9rem} }
+        </style>
+        <button class="close" aria-label="Tancar">✕</button>
+        <div class="inner" role="document">
+            <img alt="" />
+            <div class="caption" aria-hidden="false"></div>
+        </div>
+    `;
+        document.body.appendChild(lightbox);
+
+        const lb = document.getElementById('zzz-lightbox');
+        const lbImg = lb.querySelector('img');
+        const lbCap = lb.querySelector('.caption');
+        const lbClose = lb.querySelector('.close');
+
+        function openLightbox(src, caption) {
+            lbImg.src = src;
+            lbImg.alt = caption;
+            lbCap.textContent = caption;
+            lb.setAttribute('open', '');
+            lbClose.focus();
+            document.documentElement.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLightbox() {
+            lb.removeAttribute('open');
+            lbImg.src = '';
+            document.documentElement.style.overflow = '';
+            document.body.style.overflow = '';
+        }
+
+        lbClose.addEventListener('click', closeLightbox);
+        lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+        // Smooth scrolling for internal nav links and focus management
+        document.querySelectorAll('.main-nav a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                const target = document.querySelector(a.getAttribute('href'));
+                if (!target) return;
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // ensure focus for accessibility after scroll
+                setTimeout(() => { target.setAttribute('tabindex', '-1'); target.focus(); }, 400);
+            });
+        });
+
+        // Theme toggle: simple variable swap (injects a button)
+        const themeBtn = document.createElement('button');
+        themeBtn.id = 'theme-toggle';
+        themeBtn.type = 'button';
+        themeBtn.title = 'Canvia tema';
+        themeBtn.setAttribute('aria-pressed', 'false');
+        themeBtn.style.cssText = 'position:fixed;right:18px;bottom:18px;background:linear-gradient(90deg,var(--accent),var(--accent-2));border:0;color:#071426;padding:10px 12px;border-radius:12px;cursor:pointer;z-index:1100;font-weight:700; transition: all 0.6s ease;';
+        themeBtn.textContent = 'Tema';
+        document.body.appendChild(themeBtn);
+
+        let lightMode = false;
+        themeBtn.addEventListener('click', () => {
+            lightMode = !lightMode;
+            themeBtn.setAttribute('aria-pressed', String(lightMode));
+            if (lightMode) {
+                document.documentElement.style.setProperty('--bg-1', '#f7fafc');
+                document.documentElement.style.setProperty('--bg-2', '#eef2ff');
+                document.documentElement.style.setProperty('--muted', '#4b5563');
+                document.documentElement.style.setProperty('--card', 'rgba(2,6,23,0.02)');
+                document.documentElement.style.setProperty('--glass', 'rgba(2,6,23,0.04)');
+                document.documentElement.style.setProperty('--glass-border', 'rgba(2,6,23,0.06)');
+                document.documentElement.style.setProperty('color', '#071021');
+                document.documentElement.style.setProperty('color-scheme', 'light');
+            } else {
+                // remove style overrides to restore original CSS variables
+                document.documentElement.removeAttribute('style');
+                // reapply color-scheme dark explicitly
+                document.documentElement.style.setProperty('color-scheme', 'dark');
+            }
+        });
+
+        // Update footer year dynamically
+        const footerP = document.querySelector('.site-footer p');
+        if (footerP) {
+            footerP.textContent = footerP.textContent.replace(/\d{4}/, new Date().getFullYear());
+        }
+
+        // Keyboard support for character cards: Enter focuses first action
+        document.querySelectorAll('.character-card').forEach(card => {
+            card.tabIndex = card.tabIndex || 0;
+            card.addEventListener('keydown', e => {
+                if (e.key === 'Enter') {
+                    const action = card.querySelector('button, a');
+                    if (action) action.focus();
+                }
+            });
+        });
+    });
+</script>
+
+</html>
